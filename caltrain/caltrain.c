@@ -4,8 +4,7 @@
 struct station {
     int free_seats; //số ghế ngồi còn trống
     int passengers_waiting; // số khách hàng đang chờ ở ga
-    int passengers_leaving; // số khách hàng di chuyển khi đã tìm thấy ghế trống
-    //biến điều kiện
+    int passengers_leaving; // số khách hàng rời đi
     pthread_mutex_t mutex; //khai báo mutex (mutex là con trỏ đến biến cấu trúc pthread_mutex_t)
     pthread_cond_t train_arrived; // tàu đến với chỗ ngồi ngồi trống
     pthread_cond_t passengers_seated; //hành khách đã ngồi xuống
