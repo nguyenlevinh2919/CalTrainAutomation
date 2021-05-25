@@ -42,7 +42,7 @@ void station_load_train(struct station *station, int count) {
     //có chỗ ngồi trống => gán station->free_seats = count
     station->free_seats = count;
     pthread_cond_broadcast(&(station->train_arrived)); 
-    pthread_cond_wait(&(station->passengers_seated), &(station->mutex)); // waiting for all passengers to get on board
+    pthread_cond_wait(&(station->passengers_seated), &(station->mutex)); 
     station->free_seats = 0;
     pthread_mutex_unlock(&(station->mutex)); 
 }
