@@ -6,7 +6,7 @@ struct station {
     int passengers_waiting; // số khách hàng đang chờ ở ga
     int passengers_leaving; // số khách hàng rời đi
     pthread_mutex_t mutex; //khai báo mutex (mutex là con trỏ đến biến cấu trúc pthread_mutex_t)
-    pthread_cond_t train_arrived; // tàu đến với chỗ ngồi ngồi trống
+    pthread_cond_t free_seats_avaiable; // tàu đến với chỗ ngồi ngồi trống
     pthread_cond_t passengers_seated; //hành khách đã ngồi xuống
 };
 
@@ -18,7 +18,7 @@ void station_init(struct station *station) {
     station->passengers_leaving = 0;
     //khởi tạo mutex và biến điều kiện
     pthread_mutex_init(&(station->mutex), NULL);
-    pthread_cond_init(&(station->train_arrived), NULL);
+    pthread_cond_init(&(station->free_seats_avaiable), NULL);
     pthread_cond_init(&(station->passengers_seated), NULL);
 }
 
@@ -40,7 +40,7 @@ void station_load_train(struct station *station, int count) {
     }
     //có chỗ ngồi trống => gán station->free_seats = count
     station->free_seats = count;
-    pthread_cond_broadcast(&(station->train_arrived)); 
+    pthread_cond_broadcast(&(station->free_seats_avaiable)); 
     pthread_cond_wait(&(station->passengers_seated), &(station->mutex)); 
     station->free_seats = 0;
     pthread_mutex_unlock(&(station->mutex)); 
@@ -58,7 +58,7 @@ void station_wait_for_train(struct station *station) {
     station->passengers_waiting++;
     //khi hết ghế trống
     while (!station->free_seats)
-        pthread_cond_wait(&(station->train_arrived), &(station->mutex)); 
+        pthread_cond_wait(&(station->free_seats_avaiable), &(station->mutex)); 
     station->passengers_waiting--; //giảm số khách chờ
     station->passengers_leaving++; //tăng khách di chuyển
     station->free_seats--; //giảm số ghế trống
